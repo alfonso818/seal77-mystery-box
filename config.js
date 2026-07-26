@@ -1,5 +1,5 @@
 // Konfigurasi Supabase
-const SUPABASE_URL = 'https://ynvabmidklxyivacaalj.supabase.co/rest/v1/';
+const SUPABASE_URL = 'https://ynvabmidklxyivacaalj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludmFibWlka2x4eWl2YWNhYWxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwODY5NzYsImV4cCI6MjEwMDY2Mjk3Nn0.zSm4sDmIWNXVN6DRHbGw9rvFAu6v3qZoE9MDV3BJC7U';
 const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludmFibWlka2x4eWl2YWNhYWxqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTA4Njk3NiwiZXhwIjoyMTAwNjYyOTc2fQ.7tim_Y1NHV2BkE-m5UrwA69kq8PYTujI2pIdlK474Pg'; // HANYA untuk backoffice!
 
