@@ -206,6 +206,7 @@
     .reward-display {
       min-height: 56px;
       display: flex;
+      flex-direction: column;   /* <--- PERUBAHAN: menjadi kolom */
       align-items: center;
       justify-content: center;
       margin: 4px 0 20px;
@@ -416,113 +417,114 @@
 </head>
 <body>
   <div class="app-container" id="app">
-  <!-- header -->
-  <div class="brand">
-    <i class="fas fa-gift"></i>
-    <h1>SEAL77</h1>
-  </div>
-  <p class="subtitle">✨ <span>Kado Misteri</span> · Masukkan kode untuk membuka ✨</p>
+    <!-- header -->
+    <div class="brand">
+      <i class="fas fa-gift"></i>
+      <h1>SEAL77</h1>
+    </div>
+    <p class="subtitle">✨ <span>Kado Misteri</span> · Masukkan kode untuk membuka ✨</p>
 
-  <!-- GIFT BOX -->
-  <div class="gift-wrapper" id="giftWrapper">
-    <div class="gift-box" id="giftBox">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <!-- Shadow -->
-        <ellipse cx="100" cy="175" rx="70" ry="12" fill="rgba(0,0,0,0.2)" />
+    <!-- GIFT BOX -->
+    <div class="gift-wrapper" id="giftWrapper">
+      <div class="gift-box" id="giftBox">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shadow -->
+          <ellipse cx="100" cy="175" rx="70" ry="12" fill="rgba(0,0,0,0.2)" />
 
-        <!-- Box body -->
-        <rect x="30" y="70" width="140" height="100" rx="8" fill="#1a1f32" stroke="#f5b82e" stroke-width="2" />
-        <rect x="30" y="70" width="140" height="100" rx="8" fill="url(#boxGrad)" />
+          <!-- Box body -->
+          <rect x="30" y="70" width="140" height="100" rx="8" fill="#1a1f32" stroke="#f5b82e" stroke-width="2" />
+          <rect x="30" y="70" width="140" height="100" rx="8" fill="url(#boxGrad)" />
 
-        <!-- Ribbon vertical -->
-        <rect x="88" y="70" width="24" height="100" fill="#f5b82e" rx="2" opacity="0.85" />
-        <!-- Ribbon horizontal -->
-        <rect x="30" y="112" width="140" height="16" fill="#f5b82e" rx="2" opacity="0.85" />
+          <!-- Ribbon vertical -->
+          <rect x="88" y="70" width="24" height="100" fill="#f5b82e" rx="2" opacity="0.85" />
+          <!-- Ribbon horizontal -->
+          <rect x="30" y="112" width="140" height="16" fill="#f5b82e" rx="2" opacity="0.85" />
 
-        <!-- Lid -->
-        <g class="gift-lid">
-          <rect x="22" y="46" width="156" height="30" rx="6" fill="#f5b82e" stroke="#d48d1a" stroke-width="1.5" />
-          <rect x="22" y="46" width="156" height="30" rx="6" fill="url(#lidGrad)" />
-          <!-- Lid ribbon -->
-          <rect x="88" y="46" width="24" height="30" fill="#d48d1a" rx="2" opacity="0.6" />
-          <!-- Bow -->
-          <circle cx="100" cy="52" r="12" fill="#f5b82e" />
-          <circle cx="88" cy="46" r="8" fill="#f5b82e" opacity="0.7" />
-          <circle cx="112" cy="46" r="8" fill="#f5b82e" opacity="0.7" />
-        </g>
+          <!-- Lid -->
+          <g class="gift-lid">
+            <rect x="22" y="46" width="156" height="30" rx="6" fill="#f5b82e" stroke="#d48d1a" stroke-width="1.5" />
+            <rect x="22" y="46" width="156" height="30" rx="6" fill="url(#lidGrad)" />
+            <!-- Lid ribbon -->
+            <rect x="88" y="46" width="24" height="30" fill="#d48d1a" rx="2" opacity="0.6" />
+            <!-- Bow -->
+            <circle cx="100" cy="52" r="12" fill="#f5b82e" />
+            <circle cx="88" cy="46" r="8" fill="#f5b82e" opacity="0.7" />
+            <circle cx="112" cy="46" r="8" fill="#f5b82e" opacity="0.7" />
+          </g>
 
-        <!-- Glow ring (muncul saat dibuka) -->
-        <circle cx="100" cy="120" r="50" fill="none" stroke="#f5b82e" stroke-width="3" class="glow-ring" opacity="0" />
+          <!-- Glow ring (muncul saat dibuka) -->
+          <circle cx="100" cy="120" r="50" fill="none" stroke="#f5b82e" stroke-width="3" class="glow-ring" opacity="0" />
 
-        <defs>
-          <linearGradient id="boxGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#2a3147" />
-            <stop offset="100%" stop-color="#181e2e" />
-          </linearGradient>
-          <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#f5c542" />
-            <stop offset="100%" stop-color="#d48d1a" />
-          </linearGradient>
-        </defs>
-      </svg>
+          <defs>
+            <linearGradient id="boxGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2a3147" />
+              <stop offset="100%" stop-color="#181e2e" />
+            </linearGradient>
+            <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f5c542" />
+              <stop offset="100%" stop-color="#d48d1a" />
+            </linearGradient>
+          </defs>
+        </svg>
 
-      <!-- Confetti container inside gift -->
-      <div class="confetti-container" id="confettiContainer"></div>
+        <!-- Confetti container inside gift -->
+        <div class="confetti-container" id="confettiContainer"></div>
+      </div>
+    </div>
+
+    <!-- REWARD DISPLAY -->
+    <div class="reward-display">
+      <div class="reward-text" id="rewardText">
+        <span class="label">🎉 Hadiah Anda</span>
+        <span class="value" id="rewardValue">—</span>
+      </div>
+      <div class="empty-reward" id="emptyReward">Klik kado atau masukkan kode</div>
+
+      <!-- TOMBOL CLAIM (awalnya tersembunyi) -->
+      <div id="claimWrapper" style="display: none; margin-top: 12px;">
+        <a id="claimButton" href="#" target="_blank" style="
+          display: inline-block;
+          background: linear-gradient(135deg, #0088cc, #005f8a);
+          color: white;
+          padding: 12px 32px;
+          border-radius: 60px;
+          font-weight: 700;
+          font-size: 1rem;
+          text-decoration: none;
+          box-shadow: 0 4px 0 #003f5e, 0 8px 24px rgba(0, 136, 204, 0.3);
+          border: 1px solid #33aaff;
+          transition: all 0.08s linear;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        ">
+          <i class="fab fa-telegram-plane"></i> Claim Hadiah di Telegram
+        </a>
+      </div>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-section">
+      <div class="input-group">
+        <input type="text" id="codeInput" placeholder="Masukkan kode SEAL77-XXXXX" autocomplete="off" spellcheck="false" />
+        <button class="btn-open" id="openBtn">
+          <i class="fas fa-gift"></i> Buka
+        </button>
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="status-message" id="statusMessage">
+      <span class="info">⌨️ Masukkan kode untuk membuka kado</span>
     </div>
   </div>
 
-  <!-- REWARD DISPLAY -->
-<div class="reward-display">
-  <div class="reward-text" id="rewardText">
-    <span class="label">🎉 Hadiah Anda</span>
-    <span class="value" id="rewardValue">—</span>
-  </div>
-  <div class="empty-reward" id="emptyReward">Klik kado atau masukkan kode</div>
-  <!-- TOMBOL CLAIM (awalnya tersembunyi) -->
-  <div id="claimWrapper" style="display: none; margin-top: 12px;">
-    <a id="claimButton" href="#" target="_blank" style="
-      display: inline-block;
-      background: linear-gradient(135deg, #0088cc, #005f8a);
-      color: white;
-      padding: 12px 32px;
-      border-radius: 60px;
-      font-weight: 700;
-      font-size: 1rem;
-      text-decoration: none;
-      box-shadow: 0 4px 0 #003f5e, 0 8px 24px rgba(0, 136, 204, 0.3);
-      border: 1px solid #33aaff;
-      transition: all 0.08s linear;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    ">
-      <i class="fab fa-telegram-plane"></i> Claim Hadiah di Telegram
-    </a>
-  </div>
-</div>
+  <!-- Confetti overlay -->
+  <div class="confetti-overlay" id="confettiOverlay"></div>
 
-  <!-- INPUT -->
-  <div class="input-section">
-    <div class="input-group">
-      <input type="text" id="codeInput" placeholder="Masukkan kode SEAL77-XXXXX" autocomplete="off" spellcheck="false" />
-      <button class="btn-open" id="openBtn">
-        <i class="fas fa-gift"></i> Buka
-      </button>
-    </div>
-  </div>
-
-  <!-- STATUS -->
-  <div class="status-message" id="statusMessage">
-    <span class="info">⌨️ Masukkan kode untuk membuka kado</span>
-  </div>
-</div>
-
-<!-- Confetti overlay -->
-<div class="confetti-overlay" id="confettiOverlay"></div>
-
-<!-- Tambahkan Supabase dan config -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-<script src="config.js"></script>
-<script src="script.js"></script>
+  <!-- Tambahkan Supabase dan config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
