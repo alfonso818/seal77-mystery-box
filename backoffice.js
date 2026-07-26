@@ -1,59 +1,17 @@
 (async function() {
-
   // ===== LOGIN HANDLER =====
-const LOGIN_CREDENTIALS = {
-  username: 'admin',      // Ganti sesuai keinginan
-  password: 'seal77admin' // Ganti sesuai keinginan
-};
+  const LOGIN_CREDENTIALS = {
+    username: 'admin',
+    password: 'seal77admin'
+  };
 
-const loginOverlay = document.getElementById('loginOverlay');
-const loginUsername = document.getElementById('loginUsername');
-const loginPassword = document.getElementById('loginPassword');
-const loginBtn = document.getElementById('loginBtn');
-const loginError = document.getElementById('loginError');
+  const loginOverlay = document.getElementById('loginOverlay');
+  const loginUsername = document.getElementById('loginUsername');
+  const loginPassword = document.getElementById('loginPassword');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
 
-// Cek session storage
-if (sessionStorage.getItem('backofficeAuthenticated') === 'true') {
-  // Sudah login, langsung tampilkan konten
-  loginOverlay.style.display = 'none';
-} else {
-  loginOverlay.style.display = 'flex';
-}
-
-function handleLogin() {
-  const user = loginUsername.value.trim();
-  const pass = loginPassword.value.trim();
-  if (user === LOGIN_CREDENTIALS.username && pass === LOGIN_CREDENTIALS.password) {
-    sessionStorage.setItem('backofficeAuthenticated', 'true');
-    loginOverlay.style.display = 'none';
-    loginError.textContent = '';
-    // Muat ulang backoffice (atau inisialisasi ulang)
-    initBackoffice();
-  } else {
-    loginError.textContent = '❌ ID atau password salah';
-    loginPassword.value = '';
-    loginPassword.focus();
-  }
-}
-
-loginBtn.addEventListener('click', handleLogin);
-
-loginPassword.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') handleLogin();
-});
-
-loginUsername.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') loginPassword.focus();
-});
-
-  // ===== INIT SUPABASE =====
-  // GUNakan service role key untuk backoffice (simpan di environment variable)
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-  // ===== STATE =====
-  let rewardOptions = [];
-
-  // ===== DOM =====
+  // ===== DOM ELEMENTS =====
   const tbody = document.getElementById('tableBody');
   const usernameInput = document.getElementById('usernameInput');
   const rewardSelect = document.getElementById('rewardSelect');
@@ -65,6 +23,11 @@ loginUsername.addEventListener('keydown', (e) => {
   const rewardList = document.getElementById('rewardList');
   const newRewardInput = document.getElementById('newRewardInput');
   const addRewardBtn = document.getElementById('addRewardBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // ===== STATE =====
+  let rewardOptions = [];
+  let supabase = null;
 
   // ===== HELPERS =====
   function formatRupiah(value) {
@@ -74,21 +37,6 @@ loginUsername.addEventListener('keydown', (e) => {
       minimumFractionDigits: 0, 
       maximumFractionDigits: 0 
     }).format(value);
-  }
-
-  function getTodayDate() {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const now = new Date();
-    return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-  }
-
-  function generateRandomCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let rand = '';
-    for (let i = 0; i < 5; i++) {
-      rand += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return `SEAL77-${rand}`;
   }
 
   function showToast(message, type = 'success') {
@@ -114,18 +62,16 @@ loginUsername.addEventListener('keydown', (e) => {
     }, 3000);
   }
 
-  // ===== LOAD DATA DARI SUPABASE =====
+  // ===== LOAD DATA =====
   async function loadRewardOptions() {
     const { data, error } = await supabase
       .from('reward_options')
       .select('amount')
       .order('amount', { ascending: true });
-
     if (error) {
       console.error('Error loading rewards:', error);
       return [];
     }
-
     return data.map(item => item.amount);
   }
 
@@ -134,12 +80,10 @@ loginUsername.addEventListener('keydown', (e) => {
       .from('spin_codes')
       .select('*')
       .order('created_at', { ascending: false });
-
     if (error) {
       console.error('Error loading codes:', error);
       return [];
     }
-
     return data.map(item => ({
       ...item,
       created: new Date(item.created_at).toLocaleDateString('id-ID', {
@@ -151,7 +95,7 @@ loginUsername.addEventListener('keydown', (e) => {
   }
 
   // ===== RENDER FUNCTIONS =====
-  function renderRewardSelect() {
+  function renderRewardSelect(selectedValue) {
     rewardSelect.innerHTML = '';
     rewardOptions.sort((a, b) => a - b);
     rewardOptions.forEach(val => {
@@ -160,6 +104,13 @@ loginUsername.addEventListener('keydown', (e) => {
       opt.textContent = formatRupiah(val);
       rewardSelect.appendChild(opt);
     });
+    // Set selected jika ada nilai yang diberikan
+    if (selectedValue && rewardOptions.includes(selectedValue)) {
+      rewardSelect.value = selectedValue;
+    } else if (rewardOptions.length > 0) {
+      // Default ke yang pertama (terkecil)
+      rewardSelect.value = rewardOptions[0];
+    }
   }
 
   function renderRewardChips() {
@@ -179,20 +130,19 @@ loginUsername.addEventListener('keydown', (e) => {
           showToast('⚠️ Minimal 1 reward', 'error');
           return;
         }
-
-        // Hapus dari database
         const { error } = await supabase
           .from('reward_options')
           .delete()
           .eq('amount', val);
-
         if (error) {
           showToast('❌ Gagal menghapus reward', 'error');
           return;
         }
-
+        // Hapus dari state
         rewardOptions = rewardOptions.filter(v => v !== val);
-        renderRewardSelect();
+        // Render ulang select dengan mempertahankan nilai yang dipilih sebelumnya
+        const currentSelected = parseInt(rewardSelect.value, 10);
+        renderRewardSelect(currentSelected);
         renderRewardChips();
         showToast('Reward dihapus', 'info');
       });
@@ -202,14 +152,12 @@ loginUsername.addEventListener('keydown', (e) => {
   async function renderTable() {
     const codes = await loadSpinCodes();
     if (!tbody) return;
-
     if (codes.length === 0) {
       tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Belum ada kode. Buat kode baru!</td></tr>`;
       return;
     }
-
     let html = '';
-    codes.forEach((item, idx) => {
+    codes.forEach(item => {
       const statusClass = item.status === 'used' ? 'used' : 'active';
       const statusLabel = item.status === 'used' ? 'USED' : 'ACTIVE';
       const rewardFormatted = formatRupiah(item.reward);
@@ -236,7 +184,6 @@ loginUsername.addEventListener('keydown', (e) => {
             .from('spin_codes')
             .delete()
             .eq('id', id);
-
           if (error) {
             showToast('❌ Gagal menghapus kode', 'error');
           } else {
@@ -266,15 +213,13 @@ loginUsername.addEventListener('keydown', (e) => {
       showToast('⚠️ Masukkan Username terlebih dahulu', 'error');
       return;
     }
-
     const reward = parseInt(rewardSelect.value, 10);
     if (isNaN(reward) || reward <= 0) {
       showToast('⚠️ Pilih reward yang valid', 'error');
       return;
     }
 
-    // Generate unique code
-    let code = generateRandomCode();
+    let code = 'SEAL77-' + Math.random().toString(36).substring(2, 7).toUpperCase();
     let exists = true;
     let retry = 0;
     while (exists && retry < 20) {
@@ -285,17 +230,15 @@ loginUsername.addEventListener('keydown', (e) => {
         .single();
       exists = !!data;
       if (exists) {
-        code = generateRandomCode();
+        code = 'SEAL77-' + Math.random().toString(36).substring(2, 7).toUpperCase();
         retry++;
       }
     }
-
     if (retry >= 20) {
       showToast('⚠️ Gagal generate kode unik', 'error');
       return;
     }
 
-    // Insert ke database
     const { data, error } = await supabase
       .from('spin_codes')
       .insert({
@@ -308,7 +251,7 @@ loginUsername.addEventListener('keydown', (e) => {
       .single();
 
     if (error) {
-      showToast('❌ Gagal menyimpan kode', 'error');
+      showToast('❌ Gagal menyimpan kode: ' + error.message, 'error');
       console.error(error);
       return;
     }
@@ -323,7 +266,7 @@ loginUsername.addEventListener('keydown', (e) => {
   async function addReward() {
     const val = parseInt(newRewardInput.value.trim(), 10);
     if (isNaN(val) || val <= 0) {
-      showToast('⚠️ Masukkan nominal reward yang valid', 'error');
+      showToast('⚠️ Masukkan nominal reward yang valid (angka)', 'error');
       return;
     }
     if (rewardOptions.includes(val)) {
@@ -331,59 +274,96 @@ loginUsername.addEventListener('keydown', (e) => {
       return;
     }
 
-    // Insert ke database
     const { error } = await supabase
       .from('reward_options')
       .insert({ amount: val });
 
     if (error) {
-      showToast('❌ Gagal menambah reward', 'error');
+      showToast('❌ Gagal menambah reward: ' + error.message, 'error');
       return;
     }
 
     rewardOptions.push(val);
-    renderRewardSelect();
+    // Render ulang dengan mempertahankan nilai yang dipilih
+    const currentSelected = parseInt(rewardSelect.value, 10);
+    renderRewardSelect(currentSelected);
     renderRewardChips();
     newRewardInput.value = '';
     showToast(`✅ Reward ${formatRupiah(val)} ditambahkan`, 'success');
   }
 
-  // ===== INIT =====
-  window.initBackoffice = async function() {
+  // ===== INIT BACKOFFICE =====
+  async function initBackoffice() {
+    // Inisialisasi Supabase
+    if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    } else {
+      document.body.innerHTML = '<h1 style="color:red;">❌ Config error: SUPABASE_URL atau SERVICE_ROLE_KEY tidak ditemukan.</h1>';
+      return;
+    }
+
+    // Load data
     rewardOptions = await loadRewardOptions();
+    // Render select dengan default ke yang terkecil
     renderRewardSelect();
     renderRewardChips();
     await renderTable();
     updatePreview('', null);
 
-    // Events
-    generateBtn.addEventListener('click', generateCode);
-    usernameInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') generateBtn.click();
-    });
-    addRewardBtn.addEventListener('click', addReward);
-    newRewardInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') addRewardBtn.click();
-    });
+    showToast('📋 Backoffice siap', 'info');
+  }
 
-    // ===== LOGOUT =====
-  document.getElementById('logoutBtn').addEventListener('click', function() {
+  // ===== LOGIN =====
+  function handleLogin() {
+    const user = loginUsername.value.trim();
+    const pass = loginPassword.value.trim();
+    if (user === LOGIN_CREDENTIALS.username && pass === LOGIN_CREDENTIALS.password) {
+      sessionStorage.setItem('backofficeAuthenticated', 'true');
+      loginOverlay.style.display = 'none';
+      loginError.textContent = '';
+      // Inisialisasi backoffice
+      initBackoffice();
+    } else {
+      loginError.textContent = '❌ ID atau password salah';
+      loginPassword.value = '';
+      loginPassword.focus();
+    }
+  }
+
+  // ===== LOGOUT =====
+  function handleLogout() {
     if (confirm('Keluar dari backoffice?')) {
       sessionStorage.removeItem('backofficeAuthenticated');
+      // Redirect ke halaman yang sama dengan reload, akan muncul login
       location.reload();
     }
+  }
+
+  // ===== SETUP EVENT LISTENERS (hanya sekali) =====
+  loginBtn.addEventListener('click', handleLogin);
+  loginPassword.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+  loginUsername.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loginPassword.focus();
   });
 
-    // ===== START =====
+  generateBtn.addEventListener('click', generateCode);
+  usernameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') generateBtn.click();
+  });
+  addRewardBtn.addEventListener('click', addReward);
+  newRewardInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addRewardBtn.click();
+  });
+  logoutBtn.addEventListener('click', handleLogout);
+
+  // ===== STARTUP =====
   if (sessionStorage.getItem('backofficeAuthenticated') === 'true') {
     loginOverlay.style.display = 'none';
+    // Jalankan init secara async
     initBackoffice();
   } else {
     loginOverlay.style.display = 'flex';
   }
-
-    showToast('📋 Backoffice siap', 'info');
-  }
-
-  init();
 })();
