@@ -4,3 +4,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludmFibWlka2x4eWl2YWNhYWxqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTA4Njk3NiwiZXhwIjoyMTAwNjYyOTc2fQ.7tim_Y1NHV2BkE-m5UrwA69kq8PYTujI2pIdlK474Pg'; // HANYA untuk backoffice!
 
 // Jangan expose service role key di frontend! Gunakan di backend/serverless functions.
+
+// TELEGRAM LINK
+const TELEGRAM_LINK = 'https://t.me/seal77official/1';

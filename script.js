@@ -17,6 +17,9 @@
   const emptyReward = document.getElementById('emptyReward');
   const confettiContainer = document.getElementById('confettiContainer');
   const confettiOverlay = document.getElementById('confettiOverlay');
+  // Tambahan untuk tombol claim
+  const claimWrapper = document.getElementById('claimWrapper');
+  const claimButton = document.getElementById('claimButton');
 
   // ===== HELPERS =====
   function formatRupiah(value) {
@@ -38,7 +41,6 @@
 
   // ===== CONFETTI =====
   function triggerConfetti(count = 60) {
-    // ... (sama seperti di LS_USER.html)
     const colors = ['#f5b82e', '#f94144', '#f3722c', '#f9c74f', '#43aa8b', '#577590', '#f5d77a', '#ff6b6b', '#ffd93d', '#6bcb77'];
     const rect = giftBox.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
@@ -143,6 +145,15 @@
         emptyReward.style.display = 'none';
         setStatus(`🎉 Selamat! Anda mendapat ${formatRupiah(codeData.reward)}`, 'success');
         triggerConfetti(80);
+
+        // ===== TAMPILKAN TOMBOL CLAIM =====
+        if (claimWrapper && claimButton) {
+          // Ganti dengan link Telegram Anda
+          // Contoh: https://t.me/seal77_bot?start=claim_ + kode
+          claimButton.href = TELEGRAM_LINK + codeData.code;
+          claimWrapper.style.display = 'block';
+        }
+
         isProcessing = false;
         openBtn.disabled = false;
       }, 600);
@@ -204,6 +215,8 @@
   });
 
   // ===== INIT =====
+  // Sembunyikan tombol claim saat awal
+  if (claimWrapper) claimWrapper.style.display = 'none';
   setStatus('⌨️ Masukkan kode untuk membuka kado', 'info');
   console.log('🎁 Kado Misteri SEAL77 siap!');
 })();

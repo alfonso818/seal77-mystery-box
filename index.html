@@ -472,13 +472,34 @@
   </div>
 
   <!-- REWARD DISPLAY -->
-  <div class="reward-display">
-    <div class="reward-text" id="rewardText">
-      <span class="label">🎉 Hadiah Anda</span>
-      <span class="value" id="rewardValue">—</span>
-    </div>
-    <div class="empty-reward" id="emptyReward">Klik kado atau masukkan kode</div>
+<div class="reward-display">
+  <div class="reward-text" id="rewardText">
+    <span class="label">🎉 Hadiah Anda</span>
+    <span class="value" id="rewardValue">—</span>
   </div>
+  <div class="empty-reward" id="emptyReward">Klik kado atau masukkan kode</div>
+  <!-- TOMBOL CLAIM (awalnya tersembunyi) -->
+  <div id="claimWrapper" style="display: none; margin-top: 12px;">
+    <a id="claimButton" href="#" target="_blank" style="
+      display: inline-block;
+      background: linear-gradient(135deg, #0088cc, #005f8a);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 4px 0 #003f5e, 0 8px 24px rgba(0, 136, 204, 0.3);
+      border: 1px solid #33aaff;
+      transition: all 0.08s linear;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    ">
+      <i class="fab fa-telegram-plane"></i> Claim Hadiah di Telegram
+    </a>
+  </div>
+</div>
 
   <!-- INPUT -->
   <div class="input-section">
