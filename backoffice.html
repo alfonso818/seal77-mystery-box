@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backoffice · Lucky Spin Codes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #0e121f;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .backoffice-card {
+      max-width: 1150px;
+      width: 100%;
+      background: #181e2e;
+      border-radius: 40px;
+      padding: 32px 30px 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 215, 0, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .backoffice-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .backoffice-header h2 {
+      color: #f5e7c0;
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .backoffice-header h2 i {
+      color: #f5b82e;
+      filter: drop-shadow(0 0 6px #f5b82e60);
+    }
+    .backoffice-header .logout-btn {
+      background: rgba(255, 70, 70, 0.15);
+      border: 1px solid rgba(255, 70, 70, 0.3);
+      color: #ff7a7a;
+      padding: 10px 22px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .backoffice-header .logout-btn:hover {
+      background: rgba(255, 70, 70, 0.25);
+      border-color: #ff7a7a;
+    }
+
+    /* Form */
+    .form-create {
+      background: #121826;
+      border-radius: 28px;
+      padding: 24px 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid #2a3147;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 24px;
+      align-items: flex-end;
+    }
+
+    .form-row .field {
+      flex: 1 1 160px;
+    }
+
+    .form-row .field label {
+      display: block;
+      color: #a89f82;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .form-row .field input,
+    .form-row .field select {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 60px;
+      border: 1px solid #2f3750;
+      background: #0b0f1a;
+      color: #f0e6c5;
+      font-weight: 500;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-row .field input:focus,
+    .form-row .field select:focus {
+      border-color: #f5b82e;
+      box-shadow: 0 0 0 3px rgba(245, 184, 46, 0.2);
+    }
+
+    .form-row .field input::placeholder {
+      color: #4e5670;
+      font-weight: 400;
+    }
+
+    .form-row .field select option {
+      background: #181e2e;
+      color: #f0e6c5;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f5b82e, #d48d1a);
+      border: none;
+      padding: 14px 32px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #0b0e1a;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #7a4d0e, 0 8px 24px rgba(245, 184, 46, 0.25);
+      transition: all 0.08s linear;
+      border: 1px solid #ffd966;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .btn-primary:active {
+      transform: translateY(5px);
+      box-shadow: 0 1px 0 #7a4d0e, 0 8px 20px rgba(245, 184, 46, 0.2);
+    }
+
+    .btn-primary i {
+      font-size: 1.1rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid #2f3750;
+      padding: 10px 20px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #b9ae8f;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #f5b82e40;
+      color: #f5e7c0;
+    }
+
+    .btn-danger-sm {
+      background: rgba(255, 70, 70, 0.1);
+      border: 1px solid rgba(255, 70, 70, 0.2);
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      color: #ff7a7a;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-danger-sm:hover {
+      background: rgba(255, 70, 70, 0.2);
+    }
+
+    /* Preview */
+    .generated-preview {
+      margin-top: 16px;
+      padding: 14px 20px;
+      background: #0b0f1a;
+      border-radius: 60px;
+      border: 1px solid #2f3750;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .generated-preview .label-preview {
+      color: #a89f82;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .generated-preview .label-preview i {
+      color: #f5b82e;
+    }
+
+    .generated-preview .preview-code {
+      background: #1a1f2f;
+      padding: 6px 22px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #f5d77a;
+      border: 1px solid #f5b82e40;
+      box-shadow: 0 0 20px rgba(245, 184, 46, 0.1);
+      letter-spacing: 1px;
+      font-family: 'Courier New', monospace;
+      min-width: 180px;
+      text-align: center;
+    }
+
+    .generated-preview .preview-code.empty {
+      color: #4e5670;
+      font-weight: 400;
+      font-size: 0.9rem;
+      border-color: #2a3147;
+      box-shadow: none;
+    }
+
+    .generated-preview .preview-user {
+      color: #b9ae8f;
+      font-weight: 600;
+      font-size: 0.95rem;
+      background: #1a1f2f;
+      padding: 4px 18px;
+      border-radius: 40px;
+      border: 1px solid #2a3147;
+    }
+
+    .generated-preview .preview-user i {
+      color: #f5b82e;
+      margin-right: 6px;
+    }
+
+    /* Reward Management */
+    .reward-manager {
+      margin-top: 16px;
+      padding: 16px 20px;
+      background: #0b0f1a;
+      border-radius: 20px;
+      border: 1px solid #2a3147;
+    }
+
+    .reward-manager .reward-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .reward-manager .reward-header span {
+      color: #a89f82;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reward-manager .reward-header span i {
+      color: #f5b82e;
+    }
+
+    .reward-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .reward-chip {
+      background: #1a1f2f;
+      padding: 6px 16px;
+      border-radius: 40px;
+      border: 1px solid #2f3750;
+      color: #f0e6c5;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reward-chip .remove-reward {
+      color: #5a627a;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+
+    .reward-chip .remove-reward:hover {
+      color: #ff7a7a;
+    }
+
+    .add-reward-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .add-reward-form input {
+      padding: 8px 16px;
+      border-radius: 40px;
+      border: 1px solid #2f3750;
+      background: #0b0f1a;
+      color: #f0e6c5;
+      font-weight: 500;
+      font-size: 0.9rem;
+      outline: none;
+      width: 140px;
+      transition: 0.2s;
+    }
+
+    .add-reward-form input:focus {
+      border-color: #f5b82e;
+      box-shadow: 0 0 0 3px rgba(245, 184, 46, 0.2);
+    }
+
+    .add-reward-form input::placeholder {
+      color: #4e5670;
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 24px;
+      border: 1px solid #282f45;
+      background: #0f1422;
+      margin-top: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      min-width: 700px;
+    }
+
+    th {
+      text-align: left;
+      padding: 16px 18px;
+      color: #b9ae8f;
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: #131a2a;
+      border-bottom: 1px solid #2a3147;
+    }
+
+    td {
+      padding: 14px 18px;
+      color: #e6ddc0;
+      border-bottom: 1px solid #1f263b;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .badge-status.used {
+      background: #2a1f1f;
+      color: #f57a7a;
+      border: 1px solid #f57a7a40;
+    }
+
+    .badge-status.active {
+      background: #1f2a1f;
+      color: #7ae6a0;
+      border: 1px solid #7ae6a040;
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: none;
+      color: #b9ae8f;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 40px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-delete:hover {
+      background: rgba(255, 70, 70, 0.15);
+      color: #ff7a7a;
+    }
+
+    .btn-delete i {
+      font-size: 0.9rem;
+    }
+
+    .empty-row td {
+      color: #5a627a;
+      text-align: center;
+      padding: 40px 20px;
+      font-style: italic;
+    }
+
+    .text-muted {
+      color: #5a627a;
+      font-size: 0.8rem;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e263b;
+      backdrop-filter: blur(12px);
+      padding: 14px 28px;
+      border-radius: 60px;
+      border: 1px solid #f5b82e60;
+      color: #f5e7c0;
+      font-weight: 600;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 999;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      display: flex;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .backoffice-card { padding: 20px 14px; }
+      .backoffice-header h2 { font-size: 1.2rem; }
+      .form-row { flex-direction: column; align-items: stretch; }
+      .btn-primary { justify-content: center; }
+      .generated-preview { flex-direction: column; align-items: stretch; text-align: center; }
+      th, td { padding: 12px 12px; font-size: 0.8rem; }
+      .add-reward-form input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+    <div class="backoffice-card">
+  <!-- header -->
+  <div class="backoffice-header">
+    <h2><i class="fas fa-crown"></i> Lucky Spin Codes</h2>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+  </div>
+
+  <!-- form generate -->
+  <div class="form-create">
+    <div class="form-row">
+      <div class="field">
+        <label><i class="fas fa-user"></i> Username</label>
+        <input type="text" id="usernameInput" placeholder="cth: wh1sky" />
+      </div>
+      <div class="field">
+        <label><i class="fas fa-tag"></i> Reward</label>
+        <select id="rewardSelect"></select>
+      </div>
+      <div class="field" style="flex: 0 0 auto;">
+        <label>&nbsp;</label>
+        <button class="btn-primary" id="generateBtn"><i class="fas fa-plus-circle"></i> Buat Kode</button>
+      </div>
+    </div>
+
+    <!-- preview -->
+    <div class="generated-preview" id="generatedPreview">
+      <span class="label-preview">
+        <i class="fas fa-qrcode"></i> Kode Digenerate
+      </span>
+      <span class="preview-user">
+        <i class="fas fa-user"></i> <span id="previewUsername">—</span>
+      </span>
+      <span class="preview-code empty" id="previewCode">
+        <i class="fas fa-hourglass-half" style="margin-right: 8px;"></i> Belum ada
+      </span>
+    </div>
+
+    <!-- Reward Manager -->
+    <div class="reward-manager">
+      <div class="reward-header">
+        <span><i class="fas fa-list"></i> Daftar Reward</span>
+        <div class="add-reward-form">
+          <input type="number" id="newRewardInput" placeholder="Nominal (cth: 25000)" />
+          <button class="btn-secondary" id="addRewardBtn"><i class="fas fa-plus"></i> Tambah</button>
+        </div>
+      </div>
+      <div class="reward-list" id="rewardList"></div>
+    </div>
+  </div>
+
+  <!-- table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Code</th>
+          <th>Reward</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th style="text-align: right;">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toastMessage">
+  <i class="fas fa-check-circle" style="color:#7ae6a0;"></i>
+  <span id="toastText">Berhasil</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="backoffice.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "seal77-lucky-spin",
+  "version": "1.0.0",
+  "description": "SEAL77 Lucky Spin - Kado Misteri",
+  "main": "index.html",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

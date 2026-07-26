@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kado Misteri · SEAL77</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #0b0e1a 0%, #1a1f32 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .app-container {
+      max-width: 520px;
+      width: 100%;
+      background: rgba(20, 25, 48, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 48px;
+      padding: 36px 28px 44px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 215, 0, 0.12), 0 0 40px rgba(245, 184, 46, 0.06);
+      border: 1px solid rgba(255, 215, 0, 0.08);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      background: radial-gradient(circle at 30% 20%, rgba(245, 184, 46, 0.03), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ===== HEADER ===== */
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .brand h1 {
+      font-weight: 900;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #f9e05d, #f5b82e, #d48d1a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 30px rgba(245, 184, 46, 0.2);
+    }
+    .brand i {
+      font-size: 2rem;
+      color: #f5b82e;
+      filter: drop-shadow(0 0 12px rgba(245, 184, 46, 0.3));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    .subtitle {
+      color: #8a7e62;
+      font-weight: 400;
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+    .subtitle span {
+      color: #f5b82e;
+      font-weight: 600;
+    }
+
+    /* ===== GIFT BOX ===== */
+    .gift-wrapper {
+      position: relative;
+      z-index: 1;
+      margin: 8px auto 24px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .gift-box {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .gift-box:hover {
+      transform: scale(1.03);
+    }
+
+    .gift-box:active {
+      transform: scale(0.95);
+    }
+
+    /* gift SVG style */
+    .gift-box svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 12px 40px rgba(245, 184, 46, 0.15));
+    }
+
+    /* lid animation */
+    .gift-lid {
+      transform-origin: bottom center;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .gift-box.opened .gift-lid {
+      transform: rotateX(-70deg) translateY(-10px);
+    }
+
+    .gift-box .glow-ring {
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .gift-box.opened .glow-ring {
+      opacity: 1;
+      animation: pulseGlow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.08);
+      }
+    }
+
+    /* confetti burst */
+    .confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 10;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      border-radius: 2px;
+    }
+
+    .confetti-burst .confetti-piece {
+      animation: confettiFall 1.2s ease-out forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) rotate(720deg) scale(0);
+      }
+    }
+
+    /* ===== REWARD DISPLAY ===== */
+    .reward-display {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .reward-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #f5d77a;
+      text-shadow: 0 0 30px rgba(245, 184, 46, 0.3);
+      opacity: 0;
+      transform: scale(0.8) translateY(10px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .reward-text.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .reward-text .label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #8a7e62;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .reward-text .value {
+      background: linear-gradient(135deg, #f9e05d, #f5b82e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 2.2rem;
+    }
+
+    .empty-reward {
+      color: #4e5670;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    /* ===== CODE INPUT ===== */
+    .input-section {
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 60px;
+      padding: 6px;
+      border: 1px solid rgba(255, 215, 0, 0.1);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-group:focus-within {
+      border-color: rgba(245, 184, 46, 0.4);
+      box-shadow: 0 0 30px rgba(245, 184, 46, 0.05);
+    }
+
+    .input-group input {
+      flex: 1;
+      padding: 14px 22px;
+      border: none;
+      background: transparent;
+      color: #f0e6c5;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      outline: none;
+      font-family: 'Courier New', monospace;
+    }
+
+    .input-group input::placeholder {
+      color: #4e5670;
+      font-weight: 400;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group .btn-open {
+      background: linear-gradient(135deg, #f5b82e, #d48d1a);
+      border: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #0b0e1a;
+      cursor: pointer;
+      transition: all 0.08s linear;
+      box-shadow: 0 4px 0 #7a4d0e, 0 8px 24px rgba(245, 184, 46, 0.2);
+      border: 1px solid #ffd966;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .input-group .btn-open:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #7a4d0e, 0 8px 20px rgba(245, 184, 46, 0.15);
+    }
+
+    .input-group .btn-open:disabled {
+      opacity: 0.5;
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #7a4d0e;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+
+    /* ===== STATUS ===== */
+    .status-message {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      min-height: 28px;
+      position: relative;
+      z-index: 1;
+      color: #8a7e62;
+    }
+
+    .status-message .error {
+      color: #f57a7a;
+    }
+
+    .status-message .success {
+      color: #7ae6a0;
+    }
+
+    .status-message .info {
+      color: #b9ae8f;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 420px) {
+      .app-container {
+        padding: 28px 18px 32px;
+        border-radius: 32px;
+      }
+      .brand h1 {
+        font-size: 1.6rem;
+      }
+      .gift-box {
+        width: 160px;
+        height: 160px;
+      }
+      .reward-text .value {
+        font-size: 1.6rem;
+      }
+      .input-group {
+        flex-direction: column;
+        background: transparent;
+        padding: 0;
+        gap: 10px;
+        border: none;
+      }
+      .input-group input {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 60px;
+        padding: 14px 20px;
+        border: 1px solid rgba(255, 215, 0, 0.1);
+        text-align: center;
+      }
+      .input-group .btn-open {
+        justify-content: center;
+        padding: 14px;
+      }
+    }
+
+    /* ===== CONFETTI OVERLAY ===== */
+    .confetti-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .confetti-overlay .piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      animation: confettiRain linear forwards;
+    }
+
+    @keyframes confettiRain {
+      0% {
+        opacity: 1;
+        transform: translateY(-20px) rotate(0deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(110vh) rotate(720deg) scale(0.3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container" id="app">
+  <!-- header -->
+  <div class="brand">
+    <i class="fas fa-gift"></i>
+    <h1>SEAL77</h1>
+  </div>
+  <p class="subtitle">✨ <span>Kado Misteri</span> · Masukkan kode untuk membuka ✨</p>
+
+  <!-- GIFT BOX -->
+  <div class="gift-wrapper" id="giftWrapper">
+    <div class="gift-box" id="giftBox">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shadow -->
+        <ellipse cx="100" cy="175" rx="70" ry="12" fill="rgba(0,0,0,0.2)" />
+
+        <!-- Box body -->
+        <rect x="30" y="70" width="140" height="100" rx="8" fill="#1a1f32" stroke="#f5b82e" stroke-width="2" />
+        <rect x="30" y="70" width="140" height="100" rx="8" fill="url(#boxGrad)" />
+
+        <!-- Ribbon vertical -->
+        <rect x="88" y="70" width="24" height="100" fill="#f5b82e" rx="2" opacity="0.85" />
+        <!-- Ribbon horizontal -->
+        <rect x="30" y="112" width="140" height="16" fill="#f5b82e" rx="2" opacity="0.85" />
+
+        <!-- Lid -->
+        <g class="gift-lid">
+          <rect x="22" y="46" width="156" height="30" rx="6" fill="#f5b82e" stroke="#d48d1a" stroke-width="1.5" />
+          <rect x="22" y="46" width="156" height="30" rx="6" fill="url(#lidGrad)" />
+          <!-- Lid ribbon -->
+          <rect x="88" y="46" width="24" height="30" fill="#d48d1a" rx="2" opacity="0.6" />
+          <!-- Bow -->
+          <circle cx="100" cy="52" r="12" fill="#f5b82e" />
+          <circle cx="88" cy="46" r="8" fill="#f5b82e" opacity="0.7" />
+          <circle cx="112" cy="46" r="8" fill="#f5b82e" opacity="0.7" />
+        </g>
+
+        <!-- Glow ring (muncul saat dibuka) -->
+        <circle cx="100" cy="120" r="50" fill="none" stroke="#f5b82e" stroke-width="3" class="glow-ring" opacity="0" />
+
+        <defs>
+          <linearGradient id="boxGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2a3147" />
+            <stop offset="100%" stop-color="#181e2e" />
+          </linearGradient>
+          <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5c542" />
+            <stop offset="100%" stop-color="#d48d1a" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <!-- Confetti container inside gift -->
+      <div class="confetti-container" id="confettiContainer"></div>
+    </div>
+  </div>
+
+  <!-- REWARD DISPLAY -->
+  <div class="reward-display">
+    <div class="reward-text" id="rewardText">
+      <span class="label">🎉 Hadiah Anda</span>
+      <span class="value" id="rewardValue">—</span>
+    </div>
+    <div class="empty-reward" id="emptyReward">Klik kado atau masukkan kode</div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-section">
+    <div class="input-group">
+      <input type="text" id="codeInput" placeholder="Masukkan kode SEAL77-XXXXX" autocomplete="off" spellcheck="false" />
+      <button class="btn-open" id="openBtn">
+        <i class="fas fa-gift"></i> Buka
+      </button>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="status-message" id="statusMessage">
+    <span class="info">⌨️ Masukkan kode untuk membuka kado</span>
+  </div>
+</div>
+
+<!-- Confetti overlay -->
+<div class="confetti-overlay" id="confettiOverlay"></div>
+
+<!-- Tambahkan Supabase dan config -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
