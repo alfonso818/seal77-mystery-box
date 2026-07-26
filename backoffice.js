@@ -1,4 +1,51 @@
 (async function() {
+
+  // ===== LOGIN HANDLER =====
+const LOGIN_CREDENTIALS = {
+  username: 'admin',      // Ganti sesuai keinginan
+  password: 'seal77admin' // Ganti sesuai keinginan
+};
+
+const loginOverlay = document.getElementById('loginOverlay');
+const loginUsername = document.getElementById('loginUsername');
+const loginPassword = document.getElementById('loginPassword');
+const loginBtn = document.getElementById('loginBtn');
+const loginError = document.getElementById('loginError');
+
+// Cek session storage
+if (sessionStorage.getItem('backofficeAuthenticated') === 'true') {
+  // Sudah login, langsung tampilkan konten
+  loginOverlay.style.display = 'none';
+} else {
+  loginOverlay.style.display = 'flex';
+}
+
+function handleLogin() {
+  const user = loginUsername.value.trim();
+  const pass = loginPassword.value.trim();
+  if (user === LOGIN_CREDENTIALS.username && pass === LOGIN_CREDENTIALS.password) {
+    sessionStorage.setItem('backofficeAuthenticated', 'true');
+    loginOverlay.style.display = 'none';
+    loginError.textContent = '';
+    // Muat ulang backoffice (atau inisialisasi ulang)
+    initBackoffice();
+  } else {
+    loginError.textContent = '❌ ID atau password salah';
+    loginPassword.value = '';
+    loginPassword.focus();
+  }
+}
+
+loginBtn.addEventListener('click', handleLogin);
+
+loginPassword.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+loginUsername.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') loginPassword.focus();
+});
+
   // ===== INIT SUPABASE =====
   // GUNakan service role key untuk backoffice (simpan di environment variable)
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -302,7 +349,7 @@
   }
 
   // ===== INIT =====
-  async function init() {
+  window.initBackoffice = async function() {
     rewardOptions = await loadRewardOptions();
     renderRewardSelect();
     renderRewardChips();
@@ -318,6 +365,22 @@
     newRewardInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') addRewardBtn.click();
     });
+
+    // ===== LOGOUT =====
+  document.getElementById('logoutBtn').addEventListener('click', function() {
+    if (confirm('Keluar dari backoffice?')) {
+      sessionStorage.removeItem('backofficeAuthenticated');
+      location.reload();
+    }
+  });
+
+    // ===== START =====
+  if (sessionStorage.getItem('backofficeAuthenticated') === 'true') {
+    loginOverlay.style.display = 'none';
+    initBackoffice();
+  } else {
+    loginOverlay.style.display = 'flex';
+  }
 
     showToast('📋 Backoffice siap', 'info');
   }
